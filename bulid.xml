@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-2"?>
+<project name="Projekt1-Ant" basedir=".">
+        <description>Projekt1-Ant utrzymywany przy pomocy Ant</description>
+
+    	<property name="produkt" value="./bin/" />
+		<property name="produkt.kompilaty" value="./bin/classes/" />
+	    <property name="produkt.archiwum" value="./archiw-jar" />
+		<property name="produkt.archiwum.źródła" value="zrodla.jar" />
+		<property name="produkt.archiwum.kompilaty" value="skompil.jar" />
+		<property name="źródła" value="./src" />
+		<property name="biblioteka" value="./lib" />
+	
+		<path id="projekt.ścieżki">
+	        <pathelement location="bin"/>
+	        <pathelement location="lib/log4j-1.2.16.jar"/>
+		</path>
+	
+    	<target name="czyszczenie" description="Usuwa katalogi ze skompilowanym kodem">
+            <delete includeemptydirs="true" failonerror="no">
+            	<fileset dir="${produkt.kompilaty}" includes="**/*" />
+            </delete>
+            <delete includeemptydirs="true" failonerror="no">
+            	<fileset dir="${produkt}" includes="**/*" />
+            </delete>
+			<delete includeemptydirs="true" failonerror="no">
+    			<fileset dir="${produkt.archiwum}" includes="**/*" />
+    		</delete>
+      	</target>
+
+		<target name="struktura" depends="czyszczenie" description="Tworzy strukturę projektu">
+			<mkdir dir="${produkt}" />
+			<mkdir dir="${produkt.kompilaty}" />
+			<mkdir dir="${produkt.archiwum}" />
+		</target>
+
+		<target name="kompilacja" depends="struktura" description="Kompiluje kod programu">
+			<javac srcdir="${źródła}" destdir="${produkt.kompilaty}" >
+				<src path="${źródła}"/>
+			    <classpath refid="projekt.ścieżki"/>
+			</javac>
+		</target>
+	
+		<target name="plikijar" depends="kompilacja" description="Tworzy pliki jar: ze źródłami i z kompilatami">
+            <jar destfile="${produkt.archiwum}/${produkt.archiwum.źródła}">
+                    <fileset dir="${źródła}" />
+            </jar>
+            <jar destfile="${produkt.archiwum}/${produkt.archiwum.kompilaty}">
+                    <fileset dir="${produkt.kompilaty}" />
+        	</jar>
+		</target>
+
+</project>
